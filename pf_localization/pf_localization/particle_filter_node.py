@@ -75,14 +75,13 @@ class PFNode(Node):
 
     def scan_callback(self, msg):
         if self.pf is None: return
-        
-        # Run Filter logic
-        self.pf.update(msg.ranges)
+    
+        # Pass LiDAR metadata to the filter
+        self.pf.update(msg.ranges, msg.angle_min, msg.angle_increment)
         self.pf.resample()
         
-        # Publish Visualization
         self.publish_visuals(msg.header)
-
+    
     def publish_visuals(self, header):
         # Current Estimate
         est = self.pf.get_estimate()
